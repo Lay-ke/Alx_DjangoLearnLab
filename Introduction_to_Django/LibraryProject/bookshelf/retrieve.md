@@ -3,7 +3,7 @@
 ### Command:
 ```python
 # Retrieve all books
-books = Book.objects.all()
+books = Book.objects.get(title="1984")
 
 # Display the books
 books
