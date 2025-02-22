@@ -1,5 +1,7 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
+# To run commands: python manage.py shell
+
 # List all bookd in a library
 library_name="Sam Jonah Library"
 library = Library.objects.get(name=library_name)
