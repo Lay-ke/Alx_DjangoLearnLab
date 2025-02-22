@@ -15,15 +15,17 @@ from relationship_app.models import Author, Book, Library, Librarian
 # # Create a librarian
 # librarian = Librarian.objects.create(name='Joel', library=library)
 
-# Query all books by a specific author
-
-author  = Author.objects.get(name='J.K. Rowling')
-books = author.books.all()
-print(books)
 
 # List all bookd in a library
 library = Library.objects.get(name='Sam Jonah Library')
 books_in_library = library.books.all()
+
+# Query all books by a specific author
+author  = Author.objects.get(name='J.K. Rowling')
+books = author.books.all()
+print(books)
+
+
 
 # Retrieve the librarian of a library
 librarian = Librarian.objects.get(name='Joel')
