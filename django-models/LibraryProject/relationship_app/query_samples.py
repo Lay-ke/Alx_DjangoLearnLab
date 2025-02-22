@@ -14,4 +14,4 @@ print(filtered_books)
 
 
 # Retrieve the librarian of a library
-librarian = Librarian.objects.get(name='Joel')
+librarian = Librarian.objects.get(library=library_name)
