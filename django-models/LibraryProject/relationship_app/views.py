@@ -5,6 +5,8 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
 
 # Create your views here.
 def list_books(request):
@@ -39,3 +41,30 @@ def register(request):
         form = UserCreationForm()
 
     return render(request, 'relationship_app/register.html', {'form': form})
+
+
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+
+def is_librarian(user):
+    return user.groups.filter(name='Librarian').exists()
+
+
+def is_member(user):
+    return user.groups.filter(name='Member').exists()
+
+
+@user_passes_test(is_admin)
+def admin_view(request):
+    return HttpResponse("Welcome, Admin!")
+
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return HttpResponse("Welcome, Librarian!")
+
+
+@user_passes_test(is_member)
+def member_view(request):
+    return HttpResponse("Welcome, Member!")
