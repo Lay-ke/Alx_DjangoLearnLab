@@ -21,6 +21,3 @@ urlpatterns = [
     # URL for deleting a book (requires 'delete_book' permission)
     path('delete/<int:pk>/', views.delete_book, name='delete_book')
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
