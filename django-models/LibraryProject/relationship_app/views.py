@@ -37,7 +37,7 @@ def register(request):
             user = form.save()  # Create the new user
             login(request, user)  # Log the user in immediately after registration
             messages.success(request, 'Account created and logged in successfully!')
-            return redirect('home')  # Redirect to a homepage or dashboard after login
+            return redirect('list_books')  # Redirect to a homepage or dashboard after login
     else:
         form = UserCreationForm()
 

@@ -54,6 +54,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
+LOGIN_REDIRECT_URL = '/app/books/'  # Redirect to the list_books view after login
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
