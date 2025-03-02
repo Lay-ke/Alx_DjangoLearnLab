@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-@$o85+@k$azm#_kn%8=ziso=jr(k^rsqvks1d%364d_yfc)#i(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Custom user model
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
 ALLOWED_HOSTS = []
 
 
@@ -53,6 +56,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
+
+
 
 LOGIN_REDIRECT_URL = '/app/books/'  # Redirect to the list_books view after login
 
@@ -105,9 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# Custom user model
-AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
