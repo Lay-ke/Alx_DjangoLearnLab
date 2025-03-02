@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseForbidden, HttpResponse
 from .models import Book
-from .forms import BookForm, ExampleForm  # Import ExampleForm
+from .forms import ExampleForm, BookForm  # Import ExampleForm
 
 def add_csp_header(response):
     response['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self';"
