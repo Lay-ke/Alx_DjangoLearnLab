@@ -5,3 +5,9 @@
     {% endfor %}
 </ul>
 <a href="{% url 'create_a_book' %}">Create a new book</a>
+
+<form method="post" action="{% url 'create_a_book' %}">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Book Title">
+    <button type="submit">Add Book</button>
+</form>

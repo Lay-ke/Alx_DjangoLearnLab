@@ -24,7 +24,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@$o85+@k$azm#_kn%8=ziso=jr(k^rsqvks1d%364d_yfc)#i('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+# cross-site scripting filter
+SECURE_BROWSER_XSS_FILTER = True
+
+# X_FRAME_OPTIONS
+X_FRAME_OPTIONS = 'DENY'
+
+# Securing content type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Securing Cookies
+CSRF_COOKIE_SECURE = True
+
+# Session Cookies
+SESSION_COOKIE_SECURE = True
+
 
 # Custom user model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
@@ -53,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'bookshelf.middleware.ContentSecurityPolicyMiddleware', # Add the BookshelfMiddleware to the list of middleware
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'

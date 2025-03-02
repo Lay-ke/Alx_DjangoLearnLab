@@ -2,9 +2,15 @@
 <p>Author: {{ book.author }}</p>
 
 {% if perms.bookshelf.can_edit %}
-    <a href="{% url 'edit_a_book' book.id %}">Edit</a>
+    <form action="{% url 'edit_a_book' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Edit</button>
+    </form>
 {% endif %}
 
 {% if perms.bookshelf.can_delete %}
-    <a href="{% url 'delete_a_book' book.id %}">Delete</a>
+    <form action="{% url 'delete_a_book' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
 {% endif %}
