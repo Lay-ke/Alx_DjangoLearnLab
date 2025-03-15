@@ -15,7 +15,7 @@ class ListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['title', 'author', 'publication_year']
-    search_fields = ['title', 'author']  # Enable search on title and author fields
+    search_fields = ['title', 'author__name']  # Update this line to filter by author's name
     ordering_fields = ['title', 'author', 'publication_year']
 
 class CreateView(generics.CreateAPIView):

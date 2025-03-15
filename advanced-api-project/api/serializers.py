@@ -8,7 +8,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        if data['publciation_year'] > 2025:
+        if data['publication_year'] > 2025:
             raise serializers.ValidationError('Publication year must NOT be in the future')
         return data
 
