@@ -3,7 +3,7 @@ from .forms import UserRegisterForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .models import Post
+from .models import Blog
 from .models import Comment
 from .forms import CommentForm
 
@@ -31,18 +31,18 @@ def profile(request):
 
 
 class PostListView(ListView):
-    model = Post
+    model = Blog
     template_name = 'blog/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
 
 class PostDetailView(DetailView):
-    model = Post
+    model = Blog
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
+    model = Blog
     fields = ['title', 'content']
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -50,7 +50,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+    model = Blog
     fields = ['title', 'content']
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -63,7 +63,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
+    model = Blog
     success_url = '/'
     def test_func(self):
         post = self.get_object()
@@ -106,7 +106,7 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return self.object.post.get_absolute_url()
     
-    
+
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
     def test_func(self):
