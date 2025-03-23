@@ -42,6 +42,26 @@ class PostForm(forms.ModelForm):
         return post
 
 
+class PostUpdateForm(forms.ModelForm):
+    tags = TagField(required=False, widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}))
+    class Meta:
+        model = Blog
+        fields = ['title', 'content', 'tags']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+                         
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        if self.user:
+            post.author = self.user
+        if commit:
+            post.save()
+            self.save_m2m()  # Save the tags
+        return post
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
