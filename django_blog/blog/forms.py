@@ -2,8 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Blog, Comment
-from taggit.forms import TagField
-from taggit.forms import TagWidget  # Ensure TagWidget is imported
+from taggit.forms import TagField, TagWidget
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -44,6 +43,7 @@ class PostForm(forms.ModelForm):
 
 class PostUpdateForm(forms.ModelForm):
     tags = TagField(required=False, widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}))
+
     class Meta:
         model = Blog
         fields = ['title', 'content', 'tags']
@@ -51,7 +51,7 @@ class PostUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-                         
+
     def save(self, commit=True):
         post = super().save(commit=False)
         if self.user:
@@ -72,15 +72,3 @@ class CommentForm(forms.ModelForm):
         if not content:
             raise forms.ValidationError("Content cannot be empty")
         return content
-# class UserUpdateProfileForm(forms.ModelForm):
-#     photo = forms.ImageField(required=False)
-
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'first_name', 'last_name', 'photo']
-
-#     def clean_photo(self):
-#         photo = self.cleaned_data.get('photo')
-#         if photo and not photo.content_type.startswith('image'):
-#             raise forms.ValidationError("File type is not image")
-#         return photo
