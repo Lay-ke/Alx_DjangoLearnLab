@@ -10,9 +10,12 @@
     <header>
         <h1>{{ post.title }}</h1>
         <p>By {{ post.author }} on {{ post.published_date }}</p>
+        <form action="{% url 'search' %}" method="get">
+            <input type="text" name="q" placeholder="Search...">
+            <button type="submit">Search</button>
+        </form>
     </header>
     <article>
-        
         <p>{{ post.content }}</p>
     </article>
     <footer>

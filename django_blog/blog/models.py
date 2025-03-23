@@ -19,8 +19,16 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+    
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    posts = models.ManyToManyField(Blog, related_name='tags')
+    
+    def __str__(self):
+        return self.name
 # class User(AbstractUser):
 #     photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)

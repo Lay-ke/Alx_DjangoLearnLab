@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Blog
 from .models import Comment
 from .forms import CommentForm
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
@@ -116,3 +117,28 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+    
+
+class PostSearchView(ListView):
+    model = Blog
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Blog.objects.filter(
+                Q(title__icontains=query) | 
+                Q(content__icontains=query) | 
+                Q(tags__name__icontains=query)
+            ).distinct()
+        return Blog.objects.none()
+    
+class PostsByTagListView(ListView):
+    model = Blog
+    template_name = 'posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs['tag_name']
+        return Blog.objects.filter(tags__name=tag_name)

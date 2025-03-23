@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Blog, Comment
+from taggit.forms import TagField
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -20,20 +21,23 @@ class UserRegisterForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
+    tags = TagField(required=False)
+
     class Meta:
         model = Blog
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-                         
+
     def save(self, commit=True):
         post = super().save(commit=False)
         if self.user:
             post.author = self.user
         if commit:
             post.save()
+            self.save_m2m()  # Save the tags
         return post
 
 
