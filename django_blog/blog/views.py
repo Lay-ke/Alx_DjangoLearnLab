@@ -125,18 +125,18 @@ class PostSearchView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return Blog.objects.filter(
+            return Post.objects.filter(
                 Q(title__icontains=query) | 
                 Q(content__icontains=query) | 
                 Q(tags__name__icontains=query)
             ).distinct()
-        return Blog.objects.none()
+        return Post.objects.none()
     
 class PostsByTagListView(ListView):
-    model = Blog
+    model = Post
     template_name = 'posts_by_tag.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
         tag_name = self.kwargs['tag_name']
-        return Blog.objects.filter(tags__name=tag_name)
+        return Post.objects.filter(tags__name=tag_name)
