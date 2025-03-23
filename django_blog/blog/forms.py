@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Post
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -17,6 +18,23 @@ class UserRegisterForm(UserCreationForm):
 
         return cleaned_data
 
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+                         
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        if self.user:
+            post.author = self.user
+        if commit:
+            post.save()
+        return post
 
 # class UserUpdateProfileForm(forms.ModelForm):
 #     photo = forms.ImageField(required=False)
