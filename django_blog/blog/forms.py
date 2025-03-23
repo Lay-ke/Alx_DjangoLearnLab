@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Post
+from .models import Blog, Comment
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -21,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = Blog
         fields = ['title', 'content']
 
     def __init__(self, *args, **kwargs):
@@ -36,6 +36,17 @@ class PostForm(forms.ModelForm):
             post.save()
         return post
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content:
+            raise forms.ValidationError("Content cannot be empty")
+        return content
 # class UserUpdateProfileForm(forms.ModelForm):
 #     photo = forms.ImageField(required=False)
 

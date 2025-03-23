@@ -4,6 +4,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Post
+from .models import Comment
+from .forms import CommentForm
 
 # Create your views here.
 def home(request):
@@ -68,3 +70,49 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
+    
+
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'blog/comments.html'
+    context_object_name = 'comments'
+    ordering = ['-date_posted']
+    def get_queryset(self):
+        return Comment.objects.filter(post=self.kwargs['post_id'])
+    
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post_id = self.kwargs['post_id']
+        return super().form_valid(form)
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+    
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+    
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
