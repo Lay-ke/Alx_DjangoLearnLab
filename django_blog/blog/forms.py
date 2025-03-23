@@ -21,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
-    tags = TagField(required=False)
+    tags = TagField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Add tags separated by commas'}))
 
     class Meta:
         model = Blog
