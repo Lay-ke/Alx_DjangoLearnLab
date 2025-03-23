@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import UserRegisterForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from .models import Post
 
 # Create your views here.
@@ -25,6 +26,7 @@ def profile(request):
     else:
         form = UserRegisterForm()
     return render(request, 'blog/profile.html', {'form': form})
+
 
 class PostListView(ListView):
     model = Post
