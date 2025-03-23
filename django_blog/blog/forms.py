@@ -22,7 +22,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
-    tags = TagField(required=False, widget=TagWidget())
+    tags = TagField(required=False, widgets=TagWidget())
 
     class Meta:
         model = Blog
