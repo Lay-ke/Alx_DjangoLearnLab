@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser  # Import your CustomUser model
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -17,8 +18,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('password2')  # Remove password2 from validated_data
-        password = validated_data.pop('password')
-        user = CustomUser(**validated_data)
+        password = validated_data.pop('password')  # Get the password
+        user = get_user_model().objects.create_user(**validated_data)
         # Set the password (Django will hash it)
         user.set_password(password)
         
@@ -43,6 +44,8 @@ class TokenSerializer(serializers.Serializer):
     token = serializers.CharField()
 
     @staticmethod
-    def get_token_for_user(user):
-        token, _ = Token.objects.get_or_create(user=user)
+    def generate_token(user):
+        token = Token.objects.create(user=user)
         return {'token': token.key}
+        # token, _ = Token.objects.get_or_create(user=user)
+        
