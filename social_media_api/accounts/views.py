@@ -1,14 +1,11 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions, generics
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, TokenSerializer, UserProfileSerializer
 from .models import CustomUser
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 # User Registration view
@@ -65,8 +62,8 @@ class UserProfileView(APIView):
     
 
 # Follow User view
-class FollowUserView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()
 
     def post(self, request, username):
@@ -86,8 +83,8 @@ class FollowUserView(GenericAPIView):
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-class UnfollowUserView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()
 
     def post(self, request, username):
