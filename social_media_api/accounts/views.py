@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, TokenSerializer, UserProfileSerializer
 from .models import CustomUser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 # User Registration view
@@ -63,13 +65,14 @@ class UserProfileView(APIView):
     
 
 # Follow User view
-class FollowUserView(APIView):
+class FollowUserView(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
 
     def post(self, request, username):
         try:
             # Fetch the user by username
-            user_to_follow = CustomUser.objects.get(username=username)
+            user_to_follow = self.get_queryset().get(username=username)
             
             # Check if the user is trying to follow themselves
             if user_to_follow == request.user:
@@ -82,16 +85,15 @@ class FollowUserView(APIView):
         except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        
 
-# Unfollow User view
-class UnfollowUserView(APIView):
+class UnfollowUserView(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
 
     def post(self, request, username):
         try:
             # Fetch the user by username
-            user_to_unfollow = CustomUser.objects.get(username=username)
+            user_to_unfollow = self.get_queryset().get(username=username)
             
             # Check if the user is trying to unfollow themselves
             if user_to_unfollow == request.user:
