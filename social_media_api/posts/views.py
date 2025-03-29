@@ -4,6 +4,12 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+from .models import Post
+from .serializers import PostSerializer
 
 # Create your views here.
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -30,3 +36,16 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class FeedView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        followed_users = user.following.all()  # Assuming a ManyToMany relationship named 'following'
+        posts = Post.objects.filter(
+            Q(owner__in=followed_users) | Q(owner=user)
+        ).order_by('-created_at')  # Assuming 'created_at' is a DateTimeField in Post model
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
