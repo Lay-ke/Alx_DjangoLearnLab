@@ -43,9 +43,9 @@ class FeedView(APIView):
     
     def get(self, request):
         user = request.user
-        followed_users = user.following.all()  # Assuming a ManyToMany relationship named 'following'
+        following_users = user.following.all()  # Assuming a ManyToMany relationship named 'following'
         posts = Post.objects.filter(
-            Q(owner__in=followed_users) | Q(owner=user)
+            Q(author__in=following_users) | Q(author=user)
         ).order_by('-created_at')  # Assuming 'created_at' is a DateTimeField in Post model
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
