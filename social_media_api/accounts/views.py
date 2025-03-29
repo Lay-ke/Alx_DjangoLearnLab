@@ -66,10 +66,10 @@ class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()
 
-    def post(self, request, username):
+    def post(self, request, user_id):
         try:
-            # Fetch the user by username
-            user_to_follow = self.get_queryset().get(username=username)
+            # Fetch the user by ID
+            user_to_follow = self.get_queryset().get(id=user_id)
             
             # Check if the user is trying to follow themselves
             if user_to_follow == request.user:
@@ -77,7 +77,7 @@ class FollowUserView(generics.GenericAPIView):
 
             # Add the user to the following list
             request.user.following.add(user_to_follow)
-            return Response({"message": f"You are now following {username}."}, status=status.HTTP_200_OK)
+            return Response({"message": f"You are now following user with ID {user_id}."}, status=status.HTTP_200_OK)
 
         except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -87,10 +87,10 @@ class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()
 
-    def post(self, request, username):
+    def post(self, request, user_id):
         try:
-            # Fetch the user by username
-            user_to_unfollow = self.get_queryset().get(username=username)
+            # Fetch the user by ID
+            user_to_unfollow = self.get_queryset().get(id=user_id)
             
             # Check if the user is trying to unfollow themselves
             if user_to_unfollow == request.user:
@@ -98,9 +98,7 @@ class UnfollowUserView(generics.GenericAPIView):
 
             # Remove the user from the following list
             request.user.following.remove(user_to_unfollow)
-            return Response({"message": f"You have unfollowed {username}."}, status=status.HTTP_200_OK)
+            return Response({"message": f"You have unfollowed user with ID {user_id}."}, status=status.HTTP_200_OK)
 
         except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-
-
