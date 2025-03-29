@@ -52,7 +52,7 @@ class FeedView(APIView):
 # Like post
 @login_required
 def like_post(request, pk):
-    post = generics.get_object_or_404(Post, id=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     
     if not created:
@@ -71,7 +71,7 @@ def like_post(request, pk):
 # Unlike post
 @login_required
 def unlike_post(request, pk):
-    post = generics.get_object_or_404(Post, id=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like = Like.objects.filter(user=request.user, post=post).first()
     
     if not like:
