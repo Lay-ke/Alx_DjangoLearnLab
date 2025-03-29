@@ -1,17 +1,15 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from .models import Post
 from .serializers import PostSerializer
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from notifications.models import Notification
 
 # Create your views here.
@@ -42,7 +40,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class FeedView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request):
         user = request.user
@@ -54,7 +52,7 @@ class FeedView(APIView):
 # Like post
 @login_required
 def like_post(request, pk):
-    post = get_object_or_404(Post, id=pk)
+    post = generics.get_object_or_404(Post, id=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     
     if not created:
@@ -69,9 +67,11 @@ def like_post(request, pk):
     
     return JsonResponse({'message': 'Post liked successfully.'})
 
+
+# Unlike post
 @login_required
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, id=pk)
+    post = generics.get_object_or_404(Post, id=pk)
     like = Like.objects.filter(user=request.user, post=post).first()
     
     if not like:
